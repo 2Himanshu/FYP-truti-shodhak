@@ -4,7 +4,7 @@ import pickle
 from sklearn.metrics.pairwise import cosine_similarity
 from flask_cors import CORS
 from translate import Translator
-from language_tool_python import LanguageTool
+from trutishodhak_language_tool import LanguageTool
 
 app = Flask(__name__)
 CORS(app)
@@ -58,8 +58,8 @@ def suggest():
         return response
     else:
         english_translation = translate_to_english(input_word)
-        # corrected_text = correct_grammar(english_translation)
-        closest_words = [[translate_to_hindi(english_translation),0.9]]
+        corrected_text = correct_grammar(english_translation)
+        closest_words = [[translate_to_hindi(corrected_text),0.9]]
         response = jsonify({'closest_words': closest_words})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
