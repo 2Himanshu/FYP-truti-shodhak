@@ -231,10 +231,28 @@ checkSentence() {
     document.getElementById("characters").innerHTML =
       val.length + " characters";
   }
+
+  countWords(sentence) {
+  // Check if the input is a string
+  if (typeof sentence !== 'string') {
+    console.error("Input is not a string");
+    return 0; // Return 0 words if input is not a string
+  }
+
+  // Remove extra spaces and trim the sentence
+  sentence = sentence.trim().replace(/\s+/g, ' ');
+
+  // Split the sentence by spaces
+  const words = sentence.split(' ');
+
+  // Return the number of words
+  return words.length;
+}
+
   render() {
     return (
       <div className="container-fluid">
-        <h3 id="title">Truti Shodhak</h3>
+        <h3 id="title">त्रुति-शोधक</h3>
         <SideNav />
         <div className="row">
           <div className="col-sm-1">
@@ -316,25 +334,11 @@ checkSentence() {
             ) : (
               <></>
             )} */}
-            <textarea
-            rows="8"
-            id="content"
-            onKeyPress={(e) => this.onChangeContent(e)}
-            onKeyDown={this.updateVal}
-            onChange={this.updateVal}
-            className="form-control content m-2 mt-5"
-            placeholder="OUTPUT"
-            value={this.state.corrections.map((e, i) => e[0]).join(", ")}
-            />
 
-            {
-              console.log("this is correction",this.state.corrections)
-            }
-            <div
-              className="suggestions_content m-1 mt-5"
-              id="suggestions_content"
-            >
-              {/* {this.state.corrections.map((e, i) => (
+              { (this.countWords(this.state.t1))==1 ? (
+
+              <>
+              {this.state.corrections.map((e, i) => (
                 <SuggestionCard
                   key={i}
                   title={e[0]}
@@ -345,7 +349,65 @@ checkSentence() {
                   replaceContent={this.replaceContent}
                   addToDictionary={this.addToDictionary}
                 />
-              ))} */}
+              ))}
+              </>
+            ) : (
+              <>
+              <textarea
+            rows="8"
+            id="content"
+            onKeyPress={(e) => this.onChangeContent(e)}
+            onKeyDown={this.updateVal}
+            onChange={this.updateVal}
+            className="form-control content m-2 mt-5"
+            placeholder="OUTPUT"
+            value={this.state.corrections.map((e, i) => e[0]).join(", ")}
+            />
+
+              {this.state.isLoading ? (
+              <div className="ml-3 mt-5 text-primary">
+                <div class="loader"></div> Loading Suggestions...
+              </div>
+            ) : (
+              <div
+              className="suggestions_content m-1 mt-5"
+              id="suggestions_content"
+            >
+              {console.log("this is t1 ",this.state.t2)}
+              <ReactDiffViewer oldValue={this.state.t1} newValue={this.state.t2} splitView={true} />
+              </div>
+            )}
+              </>
+            )} 
+
+            {/* <textarea
+            rows="8"
+            id="content"
+            onKeyPress={(e) => this.onChangeContent(e)}
+            onKeyDown={this.updateVal}
+            onChange={this.updateVal}
+            className="form-control content m-2 mt-5"
+            placeholder="OUTPUT"
+            value={this.state.corrections.map((e, i) => e[0]).join(", ")}
+            />
+
+            
+            <div
+              className="suggestions_content m-1 mt-5"
+              id="suggestions_content"
+            >
+              {this.state.corrections.map((e, i) => (
+                <SuggestionCard
+                  key={i}
+                  title={e[0]}
+                  correction={e[1]}
+                  index={e[2]}
+                  id={"suggestion_" + i}
+                  deleteSuggestionCard={this.deleteSuggestionCard}
+                  replaceContent={this.replaceContent}
+                  addToDictionary={this.addToDictionary}
+                />
+              ))}
 
               {this.state.isLoading ? (
               <div className="ml-3 mt-5 text-primary">
@@ -353,10 +415,10 @@ checkSentence() {
               </div>
             ) : (
               <>
-              {/* {console.log("this is t1 ",this.state.t2)} */}
+              {console.log("this is t1 ",this.state.t2)}
               <ReactDiffViewer oldValue={this.state.t1} newValue={this.state.t2} splitView={true} />
               </>
-            )} 
+            )}  */}
               
 
               {this.state.corrections.length === 0 && !this.state.isLoading ? (
@@ -392,7 +454,6 @@ checkSentence() {
               ) : (
                 <></>
               )}
-            </div>
           </div>
           <div className="col-sm-1">
             <Assistant
