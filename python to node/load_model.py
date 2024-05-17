@@ -1,4 +1,4 @@
-from translate import Translator
+from mtranslate import translate
 from flask import Flask, request, jsonify
 import pickle
 from sklearn.metrics.pairwise import cosine_similarity
@@ -33,13 +33,11 @@ def count_words(sentence):
     return len(words)
 
 def translate_to_english(text):
-    translator = Translator(from_lang="hi", to_lang="en")
-    translated_text = translator.translate(text)
+    translated_text = translate(text, 'en')
     return translated_text
 
 def translate_to_hindi(text):
-    translator = Translator(from_lang="en", to_lang="hi")
-    translated_text = translator.translate(text)
+    translated_text = translate(text, 'hi')
     return translated_text
 
 def correct_grammar(text):

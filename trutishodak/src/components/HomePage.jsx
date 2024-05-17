@@ -16,7 +16,7 @@ import Assistant from "./Assistant";
 import { IoIosArrowBack } from "react-icons/io";
 import axios from 'axios';
 import ReactDiffViewer from 'react-diff-viewer'
-
+import recognition from "./VoiceToText"; // Adjust the import path as needed
 class HomePage extends Component {
   // state = {
   //   imgHolder: img1,
@@ -30,6 +30,7 @@ class HomePage extends Component {
   //   t2: "",
   // };
   database = null;
+  
   constructor(props) {
     super(props);
     this.onChangeContent = this.onChangeContent.bind(this);
@@ -50,9 +51,36 @@ class HomePage extends Component {
         isLoading: false,
         t1: "",
         t2: "",
+        listening: false,
+        recognizedText: "",
       };
   }
 
+
+
+  componentDidMount() {
+    // Attach event listener for recognition results
+    recognition.onresult = (event) => {
+      const recognizedText = event.results[0][0].transcript;
+      this.setState({ recognizedText });
+    };
+  }
+
+  toggleListening = () => {
+    this.setState((prevState) => ({
+      listening: !prevState.listening,
+    }), this.handleSpeechRecognition);
+  }
+
+  handleSpeechRecognition = () => {
+    const { listening } = this.state;
+    if (listening) {
+      recognition.start();
+    } else {
+      recognition.stop();
+    }
+  }
+  
   // componentDidMount() {
   //   Firebase.initializeApp(config);
   //   this.database = Firebase.database();
@@ -230,6 +258,7 @@ checkSentence() {
       val == "" ? "0 words" : val.split(" ").length + " words";
     document.getElementById("characters").innerHTML =
       val.length + " characters";
+      // this.recognizedText = val;
   }
 
   countWords(sentence) {
@@ -249,10 +278,14 @@ checkSentence() {
   return words.length;
 }
 
+
+
   render() {
+    const { recognizedText } = this.state;
+
     return (
       <div className="container-fluid">
-        <h3 id="title">त्रुति-शोधक</h3>
+        <h3 id="title">त्रुटि-शोधक</h3>
         <SideNav />
         <div className="row">
           <div className="col-sm-1">
@@ -301,8 +334,9 @@ checkSentence() {
               id="content"
               onKeyPress={(e) => this.onChangeContent(e)}
               onKeyDown={this.updateVal}
-              onChange={this.updateVal}
+              onChange={(e) => this.setState({ recognizedText: e.target.value })}
               className="form-control content m-2 mt-5"
+              value={recognizedText}
               placeholder="Type or paste (Ctrl+V) your text here."
             />
             <div id="keyboard_holder">
@@ -314,6 +348,12 @@ checkSentence() {
             >
               Check!
             </button>
+            <button
+          className="btn btn-sm btn-primary m-1"
+          onClick={this.toggleListening}
+        >
+          {this.state.listening ? 'Stop' : 'Start'} Voice Recognition
+        </button>
             <div className="float-right">
               <small id="characters" className="text-secondary m-1">
                 0 characters
