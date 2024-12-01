@@ -109,7 +109,7 @@ class SuggestionCard extends Component {
               <div className="row">
                 <div className="col-sm-12">
                   <div className="float-right" style={{ marginRight: "15px" }}>
-                    <MdFlag
+                    {/* <MdFlag
                       size={20}
                       fill="orange"
                       data-toggle="tooltip"
@@ -121,14 +121,14 @@ class SuggestionCard extends Component {
                           this.props.title
                         )
                       }
-                    />
-                    <FcCheckmark
+                    /> */}
+                    {/* <FcCheckmark
                       size={20}
                       data-toggle="tooltip"
                       title="Make Changes"
                       className="mr-2 icon"
                       onClick={this.changeContent}
-                    />
+                    /> */}
                     <MdClear
                       size={20}
                       fill="red"
